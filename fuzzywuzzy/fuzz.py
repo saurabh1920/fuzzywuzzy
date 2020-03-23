@@ -132,12 +132,6 @@ def _token_set(s1, s2, partial=True, force_ascii=True, full_process=True):
     if not utils.validate_string(p2):
         return 0
 
-    # 
-    
-    
-    
-    ("p1: ", p1)
-    # print("p2: ", p2)
     # pull tokens
     tokens1 = set(p1.split())
     tokens2 = set(p2.split())
@@ -146,28 +140,12 @@ def _token_set(s1, s2, partial=True, force_ascii=True, full_process=True):
     diff1to2 = tokens1.difference(tokens2)
     diff2to1 = tokens2.difference(tokens1)
 
-    # print("intersection: ", intersection)
-    # print("diff1to2: ", diff1to2)
-    # print("diff2to1: ", diff2to1)
-
-
-    # sorted_sect = " ".join(sorted(intersection))
-    # sorted_1to2 = " ".join(sorted(diff1to2))
-    # sorted_2to1 = " ".join(sorted(diff2to1))
-
-    sorted_sect = " ".join(intersection)
-    sorted_1to2 = " ".join(diff1to2)
-    sorted_2to1 = " ".join(diff2to1)
-
-    # print("sorted_sect: ", sorted_sect)
-    # print("sorted_1to2: ", sorted_1to2)
-    # print("sorted_2to1: ", sorted_2to1)
+    sorted_sect = " ".join(sorted(intersection))
+    sorted_1to2 = " ".join(sorted(diff1to2))
+    sorted_2to1 = " ".join(sorted(diff2to1))
 
     combined_1to2 = sorted_sect + " " + sorted_1to2
     combined_2to1 = sorted_sect + " " + sorted_2to1
-
-    # print("combined_1to2: ", combined_1to2)
-    # print("combined_2to1: ", combined_2to1)
 
     # strip
     sorted_sect = sorted_sect.strip()
@@ -180,12 +158,44 @@ def _token_set(s1, s2, partial=True, force_ascii=True, full_process=True):
         ratio_func = ratio
 
     pairwise = [
-        #ratio_func(sorted_sect, combined_1to2),
-        #ratio_func(sorted_sect, combined_2to1),
+        ratio_func(sorted_sect, combined_1to2),
+        ratio_func(sorted_sect, combined_2to1),
         ratio_func(combined_1to2, combined_2to1)
     ]
-    #print(pairwise)
     return max(pairwise)
+
+
+def intersection(lst1, lst2): 
+    lst3 = [value for value in lst1 if value in lst2] 
+    return lst3 
+
+@utils.check_for_none
+def _custom_token_set(s1, s2, partial=True, force_ascii=True, full_process=True):
+    """Find all alphanumeric tokens in each string...
+        - treat them as a set
+        - construct two strings of the form:
+            <sorted_intersection><sorted_remainder>
+        - take ratios of those two strings
+        - controls for unordered partial matches"""
+
+    if not full_process and s1 == s2:
+        return 100
+
+    p1 = utils.full_process(s1, force_ascii=force_ascii) if full_process else s1
+    p2 = utils.full_process(s2, force_ascii=force_ascii) if full_process else s2
+
+    if not utils.validate_string(p1):
+        return 0
+    if not utils.validate_string(p2):
+        return 0
+
+
+    # pull tokens
+    tokens1 = p1.split()
+    tokens2 = p2.split()
+
+    return int(len(intersection(tokens1, tokens2))/len(tokens2) * 100)
+
 
 def token_set_ratio(s1, s2, force_ascii=True, full_process=True):
     return _token_set(s1, s2, partial=False, force_ascii=force_ascii, full_process=full_process)
@@ -193,6 +203,9 @@ def token_set_ratio(s1, s2, force_ascii=True, full_process=True):
 
 def partial_token_set_ratio(s1, s2, force_ascii=True, full_process=True):
     return _token_set(s1, s2, partial=True, force_ascii=force_ascii, full_process=full_process)
+
+def custom_token_set_ratio(s1, s2, force_ascii=True, full_process=True):
+    return _custom_token_set(s1, s2, partial=False, force_ascii=force_ascii, full_process=full_process)
 
 
 ###################
