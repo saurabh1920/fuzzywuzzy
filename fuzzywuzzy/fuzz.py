@@ -165,12 +165,47 @@ def _token_set(s1, s2, partial=True, force_ascii=True, full_process=True):
     return max(pairwise)
 
 
+def intersection(lst1, lst2): 
+    lst3 = [value for value in lst1 if value in lst2] 
+    return lst3 
+
+@utils.check_for_none
+def _custom_token_set(s1, s2, partial=True, force_ascii=True, full_process=True):
+    """Find all alphanumeric tokens in each string...
+        - treat them as a set
+        - construct two strings of the form:
+            <sorted_intersection><sorted_remainder>
+        - take ratios of those two strings
+        - controls for unordered partial matches"""
+
+    if not full_process and s1 == s2:
+        return 100
+
+    p1 = utils.full_process(s1, force_ascii=force_ascii) if full_process else s1
+    p2 = utils.full_process(s2, force_ascii=force_ascii) if full_process else s2
+
+    if not utils.validate_string(p1):
+        return 0
+    if not utils.validate_string(p2):
+        return 0
+
+
+    # pull tokens
+    tokens1 = p1.split()
+    tokens2 = p2.split()
+
+    return int(len(intersection(tokens1, tokens2))/len(tokens2) * 100)
+
+
 def token_set_ratio(s1, s2, force_ascii=True, full_process=True):
     return _token_set(s1, s2, partial=False, force_ascii=force_ascii, full_process=full_process)
 
 
 def partial_token_set_ratio(s1, s2, force_ascii=True, full_process=True):
     return _token_set(s1, s2, partial=True, force_ascii=force_ascii, full_process=full_process)
+
+def custom_token_set_ratio(s1, s2, force_ascii=True, full_process=True):
+    return _custom_token_set(s1, s2, partial=False, force_ascii=force_ascii, full_process=full_process)
 
 
 ###################
