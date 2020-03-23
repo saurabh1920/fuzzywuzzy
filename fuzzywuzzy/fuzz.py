@@ -132,7 +132,11 @@ def _token_set(s1, s2, partial=True, force_ascii=True, full_process=True):
     if not utils.validate_string(p2):
         return 0
 
-    # print("p1: ", p1)
+    # 
+    
+    
+    
+    ("p1: ", p1)
     # print("p2: ", p2)
     # pull tokens
     tokens1 = set(p1.split())
@@ -180,7 +184,7 @@ def _token_set(s1, s2, partial=True, force_ascii=True, full_process=True):
         #ratio_func(sorted_sect, combined_2to1),
         ratio_func(combined_1to2, combined_2to1)
     ]
-    print(pairwise)
+    #print(pairwise)
     return max(pairwise)
 
 def token_set_ratio(s1, s2, force_ascii=True, full_process=True):
