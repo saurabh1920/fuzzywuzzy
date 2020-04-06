@@ -194,7 +194,7 @@ def _custom_token_set(s1, s2, partial=True, force_ascii=True, full_process=True)
     tokens1 = p1.split()
     tokens2 = p2.split()
 
-    return int(len(intersection(tokens1, tokens2))/len(tokens2) * 100)
+    return int(len(set(intersection(tokens1, tokens2)))/len(tokens2) * 100)
 
 def token_set_ratio(s1, s2, force_ascii=True, full_process=True):
     return _token_set(s1, s2, partial=False, force_ascii=force_ascii, full_process=full_process)
